@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73720162720b3dc46981418499d48d38, type: 3}
+  m_Name: BlockData_BlueRock
+  m_EditorClassIdentifier: Assembly-CSharp::Substrata.BlockData
+  blockType: 3
+  maxHealth: 120
+  resourceValue: 3
+  restoresFuel: 0
+  minimapColor: {r: 0.09803922, g: 0.09803922, b: 0.4392157, a: 1}
