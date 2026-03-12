@@ -56,14 +56,14 @@ namespace Substrata
         {
             if (GridManager.Instance == null || movementIntent == Vector2Int.zero || !isRightMouseHeld)
             {
-                body.velocity = Vector2.zero;
+                body.linearVelocity = Vector2.zero;
                 return;
             }
 
             Vector2Int currentGrid = GridManager.Instance.WorldToGridPosition(transform.position);
             if (currentGrid.x == int.MinValue)
             {
-                body.velocity = Vector2.zero;
+                body.linearVelocity = Vector2.zero;
                 drillSystem.StopDrilling();
                 return;
             }
@@ -71,7 +71,7 @@ namespace Substrata
             Vector2Int targetGrid = currentGrid + movementIntent;
             if (targetGrid.x < 0 || targetGrid.x >= GridManager.GridWidth || targetGrid.y < 0 || targetGrid.y >= GridManager.GridHeight)
             {
-                body.velocity = Vector2.zero;
+                body.linearVelocity = Vector2.zero;
                 drillSystem.StopDrilling();
                 return;
             }
@@ -87,7 +87,7 @@ namespace Substrata
                 return;
             }
 
-            body.velocity = Vector2.zero;
+            body.linearVelocity = Vector2.zero;
             drillSystem.StartDrilling(targetGrid.x, targetGrid.y);
         }
 
