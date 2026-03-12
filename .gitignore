@@ -29,6 +29,7 @@ ExportedObj/
 *.mdb
 *.opendb
 *.VC.db
+.vscode/
 
 # OS and archive noise
 .DS_Store
@@ -38,3 +39,4 @@ Thumbs.db
 
 # Local generated inventory
 /Assets/All assets.txt
+/Assets/All assets.txt.meta
