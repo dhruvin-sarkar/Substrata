@@ -43,6 +43,11 @@ namespace Substrata
         public BlockType[,] grid { get; private set; }
         public int[,] currentHealth { get; private set; }
 
+        private void OnValidate()
+        {
+            ValidateConfiguration(true);
+        }
+
         private void Awake()
         {
             if (Instance != null && Instance != this)
@@ -52,12 +57,23 @@ namespace Substrata
             }
 
             Instance = this;
+            if (!ValidateConfiguration(true))
+            {
+                EnsureGridArrays();
+                return;
+            }
+
             RebuildBlockMappingLookup();
             EnsureGridArrays();
         }
 
         public void GenerateWorld()
         {
+            if (!ValidateConfiguration(true))
+            {
+                return;
+            }
+
             EnsureGridArrays();
             RebuildBlockMappingLookup();
 
@@ -273,6 +289,56 @@ namespace Substrata
         private static bool IsWithinBounds(int x, int y)
         {
             return x >= 0 && x < GridWidth && y >= 0 && y < GridHeight;
+        }
+
+        private bool ValidateConfiguration(bool logErrors)
+        {
+            List<string> errors = new List<string>();
+
+            if (tilemap == null)
+            {
+                errors.Add("GridManager requires a Tilemap reference before world generation can run.");
+            }
+
+            for (int i = 0; i < blockMappings.Count; i++)
+            {
+                BlockMapping mapping = blockMappings[i];
+                if (mapping == null)
+                {
+                    errors.Add($"GridManager blockMappings contains a null entry at index {i}.");
+                    continue;
+                }
+
+                if (mapping.blockType == BlockType.Empty)
+                {
+                    continue;
+                }
+
+                if (mapping.tile == null)
+                {
+                    errors.Add($"GridManager block mapping for {mapping.blockType} is missing a TileBase reference.");
+                }
+
+                if (mapping.data == null)
+                {
+                    errors.Add($"GridManager block mapping for {mapping.blockType} is missing a BlockData reference.");
+                }
+            }
+
+            if (errors.Count == 0)
+            {
+                return true;
+            }
+
+            if (logErrors)
+            {
+                for (int i = 0; i < errors.Count; i++)
+                {
+                    Debug.LogError(errors[i], this);
+                }
+            }
+
+            return false;
         }
     }
 }
