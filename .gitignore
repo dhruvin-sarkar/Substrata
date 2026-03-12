@@ -35,6 +35,7 @@ ExportedObj/
 .DS_Store
 ._*
 __MACOSX/
+__MACOSX.meta
 Thumbs.db
 
 # Local generated inventory
