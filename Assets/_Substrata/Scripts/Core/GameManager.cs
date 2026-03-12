@@ -18,8 +18,8 @@ namespace Substrata
 
         public UnityEvent OnStateChanged;
 
-        public DrillSystem DrillSystem;
-        public PlayerController PlayerController;
+        public DrillSystem DrillSystem { get; private set; }
+        public PlayerController PlayerController { get; private set; }
 
         private void Awake()
         {
@@ -58,6 +58,7 @@ namespace Substrata
             }
 
             DrillSystem = drillSystem;
+            UpgradeManager.Instance?.ApplyAllUpgrades();
         }
 
         public void RegisterPlayerController(PlayerController playerController)
@@ -68,6 +69,23 @@ namespace Substrata
             }
 
             PlayerController = playerController;
+            UpgradeManager.Instance?.ApplyAllUpgrades();
+        }
+
+        public void UnregisterDrillSystem(DrillSystem drillSystem)
+        {
+            if (DrillSystem == drillSystem)
+            {
+                DrillSystem = null;
+            }
+        }
+
+        public void UnregisterPlayerController(PlayerController playerController)
+        {
+            if (PlayerController == playerController)
+            {
+                PlayerController = null;
+            }
         }
 
         private void ChangeState(GameState newState)
