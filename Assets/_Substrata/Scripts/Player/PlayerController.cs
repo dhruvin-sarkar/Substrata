@@ -35,9 +35,9 @@ namespace Substrata
 
         private void OnDestroy()
         {
-            if (GameManager.Instance != null && GameManager.Instance.PlayerController == this)
+            if (GameManager.Instance != null)
             {
-                GameManager.Instance.PlayerController = null;
+                GameManager.Instance.UnregisterPlayerController(this);
             }
         }
 
