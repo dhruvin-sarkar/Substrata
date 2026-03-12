@@ -7,6 +7,19 @@ namespace Substrata
 {
     public class UpgradeManager : MonoBehaviour
     {
+        private struct DrillBaselines
+        {
+            public float drillDamage;
+            public float hitsPerSecond;
+            public float fuelMax;
+            public float fuelConsumptionRate;
+        }
+
+        private struct PlayerBaselines
+        {
+            public float moveSpeed;
+        }
+
         [Serializable]
         public class Upgrade
         {
@@ -52,6 +65,14 @@ namespace Substrata
 
         public UnityEvent OnUpgradePurchased;
 
+        private DrillSystem baselineDrillSource;
+        private DrillBaselines drillBaselines;
+        private bool hasDrillBaselines;
+
+        private PlayerController baselinePlayerSource;
+        private PlayerBaselines playerBaselines;
+        private bool hasPlayerBaselines;
+
         private void Awake()
         {
             if (Instance != null && Instance != this)
@@ -64,6 +85,11 @@ namespace Substrata
             DontDestroyOnLoad(gameObject);
 
             OnUpgradePurchased ??= new UnityEvent();
+        }
+
+        private void Start()
+        {
+            ApplyAllUpgrades();
         }
 
         public int GetCurrentCost(string upgradeName)
@@ -85,6 +111,11 @@ namespace Substrata
                 return false;
             }
 
+            if (!CanPurchaseLiveUpgrade(upgrade))
+            {
+                return false;
+            }
+
             ResourceManager resourceManager = ResourceManager.Instance;
             if (resourceManager == null)
             {
@@ -98,9 +129,79 @@ namespace Substrata
             }
 
             upgrade.currentLevel++;
-            ApplyUpgrade(upgrade);
+            ApplyAllUpgrades();
             OnUpgradePurchased?.Invoke();
             return true;
+        }
+
+        public void ApplyAllUpgrades()
+        {
+            DrillSystem drillSystem = GameManager.Instance != null ? GameManager.Instance.DrillSystem : null;
+            PlayerController playerController = GameManager.Instance != null ? GameManager.Instance.PlayerController : null;
+
+            if (drillSystem != null)
+            {
+                CacheDrillBaselines(drillSystem);
+            }
+
+            if (playerController != null)
+            {
+                CachePlayerBaselines(playerController);
+            }
+
+            float totalDrillDamage = 0f;
+            float totalHitsPerSecond = 0f;
+            float totalFuelMax = 0f;
+            float totalFuelPreservation = 0f;
+            float totalMovementSpeed = 0f;
+
+            for (int i = 0; i < upgrades.Count; i++)
+            {
+                Upgrade upgrade = upgrades[i];
+                if (upgrade == null || upgrade.currentLevel <= 0)
+                {
+                    continue;
+                }
+
+                float totalValue = upgrade.currentLevel * upgrade.valuePerLevel;
+                switch (upgrade.upgradeName)
+                {
+                    case "DrillDamage":
+                        totalDrillDamage += totalValue;
+                        break;
+                    case "HitsPerSecond":
+                        totalHitsPerSecond += totalValue;
+                        break;
+                    case "FuelMax":
+                        totalFuelMax += totalValue;
+                        break;
+                    case "FuelPreservation":
+                        totalFuelPreservation += totalValue;
+                        break;
+                    case "MovementSpeed":
+                        totalMovementSpeed += totalValue;
+                        break;
+                }
+            }
+
+            if (drillSystem != null && hasDrillBaselines)
+            {
+                float previousFuelMax = drillSystem.fuelMax;
+                float previousFuelCurrent = drillSystem.fuelCurrent;
+
+                drillSystem.drillDamage = drillBaselines.drillDamage + totalDrillDamage;
+                drillSystem.hitsPerSecond = Mathf.Max(0.01f, drillBaselines.hitsPerSecond + totalHitsPerSecond);
+                drillSystem.fuelMax = drillBaselines.fuelMax + totalFuelMax;
+                drillSystem.fuelConsumptionRate = Mathf.Max(0.1f, drillBaselines.fuelConsumptionRate - totalFuelPreservation);
+
+                float fuelIncrease = Mathf.Max(0f, drillSystem.fuelMax - previousFuelMax);
+                drillSystem.fuelCurrent = Mathf.Clamp(previousFuelCurrent + fuelIncrease, 0f, drillSystem.fuelMax);
+            }
+
+            if (playerController != null && hasPlayerBaselines)
+            {
+                playerController.moveSpeed = playerBaselines.moveSpeed + totalMovementSpeed;
+            }
         }
 
         public void SaveData()
@@ -118,125 +219,64 @@ namespace Substrata
             return upgrades.Find(upgrade => string.Equals(upgrade.upgradeName, upgradeName, StringComparison.Ordinal));
         }
 
-        private void ApplyUpgrade(Upgrade upgrade)
+        private bool CanPurchaseLiveUpgrade(Upgrade upgrade)
         {
-            DrillSystem drillSystem = GameManager.Instance != null ? GameManager.Instance.DrillSystem : null;
-            PlayerController playerController = GameManager.Instance != null ? GameManager.Instance.PlayerController : null;
-
             switch (upgrade.upgradeName)
             {
                 case "DrillDamage":
-                    if (drillSystem != null)
-                    {
-                        drillSystem.drillDamage += upgrade.valuePerLevel;
-                    }
-                    break;
-
                 case "HitsPerSecond":
-                    if (drillSystem != null)
-                    {
-                        drillSystem.hitsPerSecond += upgrade.valuePerLevel;
-                    }
-                    break;
-
                 case "FuelMax":
-                    if (drillSystem != null)
-                    {
-                        drillSystem.fuelMax += upgrade.valuePerLevel;
-                        drillSystem.fuelCurrent = Mathf.Clamp(drillSystem.fuelCurrent + upgrade.valuePerLevel, 0f, drillSystem.fuelMax);
-                    }
-                    break;
-
                 case "FuelPreservation":
-                    if (drillSystem != null)
+                    if (GameManager.Instance == null || GameManager.Instance.DrillSystem == null)
                     {
-                        drillSystem.fuelConsumptionRate = Mathf.Max(0.1f, drillSystem.fuelConsumptionRate - upgrade.valuePerLevel);
+                        Debug.LogWarning($"Cannot purchase {upgrade.upgradeName}: no DrillSystem is registered with GameManager.", this);
+                        return false;
                     }
-                    break;
+                    return true;
 
                 case "MovementSpeed":
-                    if (playerController != null)
+                    if (GameManager.Instance == null || GameManager.Instance.PlayerController == null)
                     {
-                        playerController.moveSpeed += upgrade.valuePerLevel;
+                        Debug.LogWarning($"Cannot purchase {upgrade.upgradeName}: no PlayerController is registered with GameManager.", this);
+                        return false;
                     }
-                    break;
-
-                case "CritChance":
-                    // TODO: apply once crit system exists.
-                    break;
-
-                case "CritDamage":
-                    // TODO: apply once crit system exists.
-                    break;
-
-                case "BlockRadius":
-                    // TODO: apply once area mining exists.
-                    break;
-
-                case "ResourceMultiplier":
-                    // TODO: apply once resource multiplier system exists.
-                    break;
-
-                case "OverdriveSpeed":
-                    // TODO: apply once overdrive system exists.
-                    break;
-
-                case "OverdriveRecharge":
-                    // TODO: apply once overdrive system exists.
-                    break;
-
-                case "MaxOverdrive":
-                    // TODO: apply once overdrive system exists.
-                    break;
-
-                case "EmergencyFuel":
-                    // TODO: apply once emergency fuel system exists.
-                    break;
-
-                case "ReleasedQuake":
-                    // TODO: apply once quake ability exists.
-                    break;
-
-                case "ThrowDynamite":
-                    // TODO: apply once dynamite ability exists.
-                    break;
-
-                case "AutoDrones":
-                    // TODO: apply once drone system exists.
-                    break;
-
-                case "DroneCritHit":
-                    // TODO: apply once drone crit system exists.
-                    break;
-
-                case "DroneInventory":
-                    // TODO: apply once drone inventory exists.
-                    break;
-
-                case "AdditionalDrones":
-                    // TODO: apply once drone spawn system exists.
-                    break;
-
-                case "OreSpawnRate":
-                    // TODO: apply once ore generation modifiers exist.
-                    break;
-
-                case "CellValueIron":
-                    // TODO: apply once per-cell value scaling exists.
-                    break;
-
-                case "CellValueGold":
-                    // TODO: apply once per-cell value scaling exists.
-                    break;
-
-                case "CellValueStone":
-                    // TODO: apply once per-cell value scaling exists.
-                    break;
-
-                case "XPGain":
-                    // TODO: apply once XP system exists.
-                    break;
+                    return true;
             }
+
+            return true;
+        }
+
+        private void CacheDrillBaselines(DrillSystem drillSystem)
+        {
+            if (hasDrillBaselines && baselineDrillSource == drillSystem)
+            {
+                return;
+            }
+
+            baselineDrillSource = drillSystem;
+            drillBaselines = new DrillBaselines
+            {
+                drillDamage = drillSystem.drillDamage,
+                hitsPerSecond = drillSystem.hitsPerSecond,
+                fuelMax = drillSystem.fuelMax,
+                fuelConsumptionRate = drillSystem.fuelConsumptionRate
+            };
+            hasDrillBaselines = true;
+        }
+
+        private void CachePlayerBaselines(PlayerController playerController)
+        {
+            if (hasPlayerBaselines && baselinePlayerSource == playerController)
+            {
+                return;
+            }
+
+            baselinePlayerSource = playerController;
+            playerBaselines = new PlayerBaselines
+            {
+                moveSpeed = playerController.moveSpeed
+            };
+            hasPlayerBaselines = true;
         }
     }
 }
