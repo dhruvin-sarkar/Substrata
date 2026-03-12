@@ -42,9 +42,9 @@ namespace Substrata
 
         private void OnDestroy()
         {
-            if (GameManager.Instance != null && GameManager.Instance.DrillSystem == this)
+            if (GameManager.Instance != null)
             {
-                GameManager.Instance.DrillSystem = null;
+                GameManager.Instance.UnregisterDrillSystem(this);
             }
         }
 
