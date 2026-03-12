@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://bq2qds34blthg"
+path="res://.godot/imported/phantom.mp3-82d1c946d62e7336e12a9a3e5efc6375.mp3str"
+
+[deps]
+
+source_file="res://CozyTunes(Pro)/Audio/mp3/Sound Effects/phantom.mp3"
+dest_files=["res://.godot/imported/phantom.mp3-82d1c946d62e7336e12a9a3e5efc6375.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

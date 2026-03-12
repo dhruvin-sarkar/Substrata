@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://belnf22shtly5"
+path="res://.godot/imported/Floating Dream.mp3-0a3a169c9e790bf9ff723fe34a1023ff.mp3str"
+
+[deps]
+
+source_file="res://CozyTunes(Pro)/Audio/mp3/Tracks/Floating Dream.mp3"
+dest_files=["res://.godot/imported/Floating Dream.mp3-0a3a169c9e790bf9ff723fe34a1023ff.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

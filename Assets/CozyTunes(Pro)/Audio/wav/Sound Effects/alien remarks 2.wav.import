@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://dsxiepd24qsrj"
+path="res://.godot/imported/alien remarks 2.wav-460535a70c5d760bb6a98ab9e1ca145e.sample"
+
+[deps]
+
+source_file="res://CozyTunes(Pro)/Audio/wav/Sound Effects/alien remarks 2.wav"
+dest_files=["res://.godot/imported/alien remarks 2.wav-460535a70c5d760bb6a98ab9e1ca145e.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

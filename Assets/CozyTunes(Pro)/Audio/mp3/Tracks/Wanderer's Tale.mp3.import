@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://dutibwvri6un"
+path="res://.godot/imported/Wanderer's Tale.mp3-ab17c14f5cbafaf745a3cb3aca12a707.mp3str"
+
+[deps]
+
+source_file="res://CozyTunes(Pro)/Audio/mp3/Tracks/Wanderer's Tale.mp3"
+dest_files=["res://.godot/imported/Wanderer's Tale.mp3-ab17c14f5cbafaf745a3cb3aca12a707.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://b05yipx5f7j3m"
+path="res://.godot/imported/Strange Worlds.mp3-f9d69de40287e90647039dd6745afcef.mp3str"
+
+[deps]
+
+source_file="res://CozyTunes(Pro)/Audio/mp3/Tracks/Strange Worlds.mp3"
+dest_files=["res://.godot/imported/Strange Worlds.mp3-f9d69de40287e90647039dd6745afcef.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

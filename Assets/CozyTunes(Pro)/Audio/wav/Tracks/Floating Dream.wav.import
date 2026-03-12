@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://dwwkrvhwc0wni"
+path="res://.godot/imported/Floating Dream.wav-4c461628d78ca731bec39a1ad89821a9.sample"
+
+[deps]
+
+source_file="res://CozyTunes(Pro)/Audio/wav/Tracks/Floating Dream.wav"
+dest_files=["res://.godot/imported/Floating Dream.wav-4c461628d78ca731bec39a1ad89821a9.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://wf3y8jtck07r"
+path="res://.godot/imported/shadow.ogg-1d9b5bad48eab25a7be274a0514683ca.oggvorbisstr"
+
+[deps]
+
+source_file="res://CozyTunes(Pro)/Audio/ogg/Sound Effects/shadow.ogg"
+dest_files=["res://.godot/imported/shadow.ogg-1d9b5bad48eab25a7be274a0514683ca.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

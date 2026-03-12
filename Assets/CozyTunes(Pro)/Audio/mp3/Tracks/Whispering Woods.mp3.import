@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://dcryje7dlhhme"
+path="res://.godot/imported/Whispering Woods.mp3-47fe64db59982f1c459dfb218cc2ca95.mp3str"
+
+[deps]
+
+source_file="res://CozyTunes(Pro)/Audio/mp3/Tracks/Whispering Woods.mp3"
+dest_files=["res://.godot/imported/Whispering Woods.mp3-47fe64db59982f1c459dfb218cc2ca95.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
